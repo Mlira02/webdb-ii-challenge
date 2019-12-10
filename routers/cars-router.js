@@ -14,4 +14,19 @@ router.get('/', (req,res) => {
     })
 });
 
+router.post('/', (req,res) => {
+    const carsData = req.body;
+
+    db('cars').insert(carsData)
+    .then(ids => {
+        db('cars').where({ id: ids[0] })
+        .then(newCar => {
+            res.status(201).json(newCar);
+        })
+    })
+    .catch(err => {
+        res.status(500).json({ message: 'Error with request...'})
+    })
+})
+
 module.exports = router;
